@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.turbo/
+coverage/
+.env
+*.local
+.DS_Store
+Veriq-PRD-v2_1.md
+PLAN.md
+AGENTS.md
+DESIGN.md
+.devin
+

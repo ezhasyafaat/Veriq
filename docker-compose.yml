@@ -1,0 +1,36 @@
+services:
+  db:
+    image: pgvector/pgvector:pg17
+    environment:
+      POSTGRES_USER: veriq
+      POSTGRES_PASSWORD: veriq
+      POSTGRES_DB: veriq
+    ports:
+      - "5433:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./apps/api/db/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U veriq -d veriq"]
+      interval: 2s
+      timeout: 3s
+      retries: 15
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DATABASE_URL: postgres://veriq_app:veriq_app@db:5432/veriq
+      DATABASE_OWNER_URL: postgres://veriq:veriq@db:5432/veriq
+      PORT: "3000"
+      SEED_ON_BOOT: "true"
+      SEED_ADMIN_PASSWORD: veriq-dev-admin
+    ports:
+      - "3002:3000"
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

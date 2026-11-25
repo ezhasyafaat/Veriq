@@ -1,0 +1,91 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme inline {
+  --color-background: var(--bg);
+  --color-surface: var(--surface);
+  --color-foreground: var(--fg);
+  --color-muted: var(--muted);
+  --color-edge: var(--edge);
+  --color-accent: var(--accent);
+  --color-accent-fg: var(--accent-fg);
+}
+
+:root {
+  color-scheme: light;
+  --bg: #fafafa;
+  --surface: #ffffff;
+  --fg: #18181b;
+  --muted: #52525b;
+  --edge: #e4e4e7;
+  --accent: #1d4ed8;
+  --accent-fg: #ffffff;
+}
+
+.dark {
+  color-scheme: dark;
+  --bg: #09090b;
+  --surface: #18181b;
+  --fg: #f4f4f5;
+  --muted: #a1a1aa;
+  --edge: #27272a;
+  --accent: #60a5fa;
+  --accent-fg: #09090b;
+}
+
+body {
+  @apply bg-background text-foreground antialiased;
+}
+
+/* Accessible focus states and pointer cursors for real controls */
+:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+button:not(:disabled),
+[role='button']:not(:disabled),
+a,
+label,
+summary {
+  cursor: pointer;
+}
+
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* Landing section reveals: one reveal per section via IntersectionObserver,
+   transform+opacity only, collapsed under reduced motion. */
+.reveal {
+  opacity: 0;
+  transform: translateY(14px);
+  transition:
+    opacity 0.5s ease,
+    transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reveal.is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Records-system motif: a faint hairline grid fading out from the top, evoking
+   an audit ledger. */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--edge) 70%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--edge) 70%, transparent) 1px, transparent 1px);
+  background-size: 56px 56px;
+  -webkit-mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, black 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 90% 75% at 50% 0%, black 25%, transparent 78%);
+}
